@@ -1,4 +1,5 @@
 import 'package:cep_aberto_app/app/modules/home/presenter/controllers/home_store.dart';
+import 'package:cep_aberto_app/app/modules/home/ui/desktop_web/components/search_address.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -15,9 +16,25 @@ class _HomeDesktopPageState extends State<HomeDesktopPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Desktop Web Page'),
+        title: Text(
+          'Via Cep App',
+          style: Theme.of(context)
+              .textTheme
+              .bodyLarge!
+              .copyWith(color: Colors.white),
+        ),
+        backgroundColor: Theme.of(context).colorScheme.primary,
       ),
-      body: Container(),
+      body: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SearchAddress(),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
