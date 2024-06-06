@@ -1,2 +1,10 @@
 
 build/
+
+.vscode/
+
+.dart_tool/
+
+.flutter-plugins-dependencies
+
+.flutter-plugins
