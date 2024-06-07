@@ -11,6 +11,7 @@ class EmptyComponent extends StatelessWidget {
         LottieBuilder.asset(
           'assets/error.json',
           height: 250,
+          repeat: false,
         ),
         Text(
           'Nenhum dado a ser exibido, para começar informe um cep ou endereço nos campos acima!',

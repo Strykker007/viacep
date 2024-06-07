@@ -2,6 +2,7 @@ import 'package:cep_aberto_app/app/modules/home/presenter/controllers/home_store
 import 'package:cep_aberto_app/app/modules/home/ui/desktop_web/components/data_table_component.dart';
 import 'package:cep_aberto_app/app/modules/home/ui/desktop_web/components/empty_component.dart';
 import 'package:cep_aberto_app/app/modules/home/ui/desktop_web/components/error_component.dart';
+import 'package:cep_aberto_app/app/modules/home/ui/desktop_web/components/loading_component.dart';
 import 'package:cep_aberto_app/app/modules/home/ui/desktop_web/components/search_address.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -47,7 +48,9 @@ class _HomeDesktopPageState extends State<HomeDesktopPage> {
                   if (store.address.cep == null && store.addressList.isEmpty) {
                     return const EmptyComponent();
                   }
-                  if (store.isLoading) {}
+                  if (store.isLoading) {
+                    return const LoadingComponent();
+                  }
                   return const DataTableComponent();
                 },
               ),

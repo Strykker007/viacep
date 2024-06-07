@@ -61,15 +61,31 @@ mixin _$HomeStore on HomeStoreBase, Store {
       Atom(name: 'HomeStoreBase.addressList', context: context);
 
   @override
-  List<CepModel> get addressList {
+  ObservableList<CepModel> get addressList {
     _$addressListAtom.reportRead();
     return super.addressList;
   }
 
   @override
-  set addressList(List<CepModel> value) {
+  set addressList(ObservableList<CepModel> value) {
     _$addressListAtom.reportWrite(value, super.addressList, () {
       super.addressList = value;
+    });
+  }
+
+  late final _$filteredAddressListAtom =
+      Atom(name: 'HomeStoreBase.filteredAddressList', context: context);
+
+  @override
+  ObservableList<CepModel> get filteredAddressList {
+    _$filteredAddressListAtom.reportRead();
+    return super.filteredAddressList;
+  }
+
+  @override
+  set filteredAddressList(ObservableList<CepModel> value) {
+    _$filteredAddressListAtom.reportWrite(value, super.filteredAddressList, () {
+      super.filteredAddressList = value;
     });
   }
 
@@ -86,22 +102,6 @@ mixin _$HomeStore on HomeStoreBase, Store {
   set isLoading(bool value) {
     _$isLoadingAtom.reportWrite(value, super.isLoading, () {
       super.isLoading = value;
-    });
-  }
-
-  late final _$filterAtom =
-      Atom(name: 'HomeStoreBase.filter', context: context);
-
-  @override
-  FilterTypeEnum get filter {
-    _$filterAtom.reportRead();
-    return super.filter;
-  }
-
-  @override
-  set filter(FilterTypeEnum value) {
-    _$filterAtom.reportWrite(value, super.filter, () {
-      super.filter = value;
     });
   }
 
@@ -134,6 +134,70 @@ mixin _$HomeStore on HomeStoreBase, Store {
   set error(Failure? value) {
     _$errorAtom.reportWrite(value, super.error, () {
       super.error = value;
+    });
+  }
+
+  late final _$uniqueLocalidadesAtom =
+      Atom(name: 'HomeStoreBase.uniqueLocalidades', context: context);
+
+  @override
+  ObservableList<String> get uniqueLocalidades {
+    _$uniqueLocalidadesAtom.reportRead();
+    return super.uniqueLocalidades;
+  }
+
+  @override
+  set uniqueLocalidades(ObservableList<String> value) {
+    _$uniqueLocalidadesAtom.reportWrite(value, super.uniqueLocalidades, () {
+      super.uniqueLocalidades = value;
+    });
+  }
+
+  late final _$uniqueUFsAtom =
+      Atom(name: 'HomeStoreBase.uniqueUFs', context: context);
+
+  @override
+  ObservableList<String> get uniqueUFs {
+    _$uniqueUFsAtom.reportRead();
+    return super.uniqueUFs;
+  }
+
+  @override
+  set uniqueUFs(ObservableList<String> value) {
+    _$uniqueUFsAtom.reportWrite(value, super.uniqueUFs, () {
+      super.uniqueUFs = value;
+    });
+  }
+
+  late final _$selectedLocalidadeAtom =
+      Atom(name: 'HomeStoreBase.selectedLocalidade', context: context);
+
+  @override
+  String? get selectedLocalidade {
+    _$selectedLocalidadeAtom.reportRead();
+    return super.selectedLocalidade;
+  }
+
+  @override
+  set selectedLocalidade(String? value) {
+    _$selectedLocalidadeAtom.reportWrite(value, super.selectedLocalidade, () {
+      super.selectedLocalidade = value;
+    });
+  }
+
+  late final _$selectedUFAtom =
+      Atom(name: 'HomeStoreBase.selectedUF', context: context);
+
+  @override
+  String? get selectedUF {
+    _$selectedUFAtom.reportRead();
+    return super.selectedUF;
+  }
+
+  @override
+  set selectedUF(String? value) {
+    _$selectedUFAtom.reportWrite(value, super.selectedUF, () {
+      super.selectedUF = value;
     });
   }
 
@@ -203,16 +267,42 @@ mixin _$HomeStore on HomeStoreBase, Store {
   }
 
   @override
+  void filterAddressListByLocalidade(String? localidade) {
+    final _$actionInfo = _$HomeStoreBaseActionController.startAction(
+        name: 'HomeStoreBase.filterAddressListByLocalidade');
+    try {
+      return super.filterAddressListByLocalidade(localidade);
+    } finally {
+      _$HomeStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void filterAddressListByUF(String? uf) {
+    final _$actionInfo = _$HomeStoreBaseActionController.startAction(
+        name: 'HomeStoreBase.filterAddressListByUF');
+    try {
+      return super.filterAddressListByUF(uf);
+    } finally {
+      _$HomeStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 params: ${params},
 address: ${address},
 searchingByCep: ${searchingByCep},
 addressList: ${addressList},
+filteredAddressList: ${filteredAddressList},
 isLoading: ${isLoading},
-filter: ${filter},
 isAddressInvalidToSearch: ${isAddressInvalidToSearch},
-error: ${error}
+error: ${error},
+uniqueLocalidades: ${uniqueLocalidades},
+uniqueUFs: ${uniqueUFs},
+selectedLocalidade: ${selectedLocalidade},
+selectedUF: ${selectedUF}
     ''';
   }
 }

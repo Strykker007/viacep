@@ -1,4 +1,3 @@
-import 'package:cep_aberto_app/app/core/enums/filter_type_enum.dart';
 import 'package:cep_aberto_app/app/modules/home/infra/models/cep_model.dart';
 import 'package:cep_aberto_app/app/modules/home/presenter/usecases/i_viacep_usecase.dart';
 import 'package:mobx/mobx.dart';
@@ -23,13 +22,13 @@ abstract class HomeStoreBase with Store {
   bool searchingByCep = true;
 
   @observable
-  List<CepModel> addressList = List.empty(growable: true);
+  ObservableList<CepModel> addressList = ObservableList<CepModel>();
+
+  @observable
+  ObservableList<CepModel> filteredAddressList = ObservableList<CepModel>();
 
   @observable
   bool isLoading = false;
-
-  @observable
-  FilterTypeEnum filter = FilterTypeEnum.uf;
 
   @observable
   bool isAddressInvalidToSearch = true;
@@ -37,7 +36,39 @@ abstract class HomeStoreBase with Store {
   @observable
   Failure? error;
 
-  HomeStoreBase(this.usecase);
+  @observable
+  ObservableList<String> uniqueLocalidades = ObservableList<String>();
+
+  @observable
+  ObservableList<String> uniqueUFs = ObservableList<String>();
+
+  @observable
+  String? selectedLocalidade;
+
+  @observable
+  String? selectedUF;
+
+  HomeStoreBase(this.usecase) {
+    reaction((_) => addressList, (_) {
+      _extractUniqueValues();
+    });
+  }
+
+  void _extractUniqueValues() {
+    final Set<String> localidades = {};
+    final Set<String> ufs = {};
+    for (final cepModel in addressList) {
+      if (cepModel.localidade != null) {
+        localidades.add(cepModel.localidade!);
+      }
+      if (cepModel.uf != null) {
+        ufs.add(cepModel.uf!);
+      }
+    }
+    uniqueLocalidades = ObservableList<String>.of(localidades);
+    uniqueUFs = ObservableList<String>.of(ufs);
+    filteredAddressList = ObservableList<CepModel>.of(addressList);
+  }
 
   @action
   void updateParams(SearchParams value) {
@@ -66,7 +97,7 @@ abstract class HomeStoreBase with Store {
 
   @action
   Future<void> searchAddressByCep() async {
-    setLoading(true); // Ativa o estado de carregamento
+    setLoading(true);
 
     final result = await usecase(params);
 
@@ -76,7 +107,6 @@ abstract class HomeStoreBase with Store {
         address = CepModel();
       },
       (right) {
-        addressList = [];
         address = right as CepModel;
         error = null;
       },
@@ -88,12 +118,17 @@ abstract class HomeStoreBase with Store {
   @action
   void clearSearchFields() {
     address = CepModel();
-    addressList = [];
+    addressList = ObservableList();
+    filteredAddressList = ObservableList();
+    uniqueLocalidades = ObservableList();
+    uniqueUFs = ObservableList();
+    selectedLocalidade = null;
+    selectedUF = null;
   }
 
   @action
   Future<void> searchAddressByAddress() async {
-    setLoading(true); // Ativa o estado de carregamento
+    setLoading(true);
 
     final result = await usecase.getAddressByAddress(params);
 
@@ -104,11 +139,35 @@ abstract class HomeStoreBase with Store {
       },
       (right) {
         address = CepModel();
-        addressList = right as List<CepModel>;
+        addressList = ObservableList<CepModel>.of(right as List<CepModel>);
         error = null;
       },
     );
 
     setLoading(false);
+  }
+
+  @action
+  void filterAddressListByLocalidade(String? localidade) {
+    if (localidade != null && localidade.isNotEmpty) {
+      filteredAddressList = ObservableList<CepModel>.of(
+        addressList
+            .where((address) => address.localidade == localidade)
+            .toList(),
+      );
+    } else {
+      filteredAddressList = ObservableList<CepModel>.of(addressList);
+    }
+  }
+
+  @action
+  void filterAddressListByUF(String? uf) {
+    if (uf != null && uf.isNotEmpty) {
+      filteredAddressList = ObservableList<CepModel>.of(
+        addressList.where((address) => address.uf == uf).toList(),
+      );
+    } else {
+      filteredAddressList = ObservableList<CepModel>.of(addressList);
+    }
   }
 }

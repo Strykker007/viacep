@@ -6,6 +6,8 @@ class LoadingComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LottieBuilder.asset('assets/loading.json');
+    return LottieBuilder.asset(
+      'assets/loading.json',
+    );
   }
 }

@@ -1,16 +1,13 @@
 import 'package:cep_aberto_app/app/modules/home/ui/desktop_web/components/loading_component.dart';
 import 'package:cep_aberto_app/app/modules/home/ui/mobile/components/cep_result_search_component.dart';
 import 'package:cep_aberto_app/app/modules/home/ui/mobile/components/search_address_mobile.dart';
-import 'package:cep_aberto_app/app/modules/home/ui/mobile/components/text_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:lottie/lottie.dart';
 
 import '../../presenter/controllers/home_store.dart';
 import '../desktop_web/components/empty_component.dart';
 import '../desktop_web/components/error_component.dart';
-import '../desktop_web/components/search_address.dart';
 
 class HomeMobilePage extends StatefulWidget {
   const HomeMobilePage({super.key});

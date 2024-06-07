@@ -16,6 +16,7 @@ class ErrorComponent extends StatelessWidget {
         LottieBuilder.asset(
           'assets/error.json',
           height: 250,
+          repeat: false,
         ),
         Text(
           'Ops, ocorreu um erro com sua requisição! Tente novamente!',

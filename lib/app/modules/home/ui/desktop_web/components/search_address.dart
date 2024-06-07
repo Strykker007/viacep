@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:cep_aberto_app/app/modules/home/presenter/controllers/home_store.dart';
@@ -41,7 +42,6 @@ class _SearchAddressState extends State<SearchAddress> {
             color: Colors.white,
           ),
           child: Row(
-            mainAxisSize: MainAxisSize.min,
             children: [
               Observer(
                 builder: (context) => store.searchingByCep
@@ -225,36 +225,87 @@ class _SearchAddressState extends State<SearchAddress> {
                   );
                 },
               ),
-              const Spacer(),
-              Observer(builder: (context) {
-                return Visibility(
-                  visible:
-                      store.address.cep != null || store.addressList.isNotEmpty,
-                  child: GestureDetector(
-                    onTap: () {
-                      cepController.clear();
-                      ufController.clear();
-                      cityController.clear();
-                      streetController.clear();
-                      store.clearSearchFields();
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(15),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                      child: Text(
-                        'Limpar busca',
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium!
-                            .copyWith(color: Colors.white),
+              Observer(
+                builder: (context) {
+                  return Visibility(
+                    visible: store.uniqueUFs.isNotEmpty,
+                    child: DropdownButton<String>(
+                      hint: const Text("Selecione UF"),
+                      dropdownColor: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      value: store.selectedUF,
+                      onChanged: (String? newValue) {
+                        store.selectedUF = newValue;
+                        store.filterAddressListByUF(newValue);
+                      },
+                      items: store.uniqueUFs
+                          .map<DropdownMenuItem<String>>((String uf) {
+                        return DropdownMenuItem<String>(
+                          value: uf,
+                          child: Text(uf),
+                        );
+                      }).toList(),
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(width: 10),
+              Observer(
+                builder: (context) {
+                  return Visibility(
+                    visible: store.uniqueLocalidades.isNotEmpty,
+                    child: DropdownButton<String>(
+                      hint: const Text("Selecione Localidade"),
+                      value: store.selectedLocalidade,
+                      dropdownColor: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      onChanged: (String? newValue) {
+                        store.selectedLocalidade = newValue;
+                        store.filterAddressListByLocalidade(newValue);
+                      },
+                      items: store.uniqueLocalidades
+                          .map<DropdownMenuItem<String>>((String localidade) {
+                        return DropdownMenuItem<String>(
+                          value: localidade,
+                          child: Text(localidade),
+                        );
+                      }).toList(),
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(width: 10),
+              Observer(
+                builder: (context) {
+                  return Visibility(
+                    visible: store.address.cep != null ||
+                        store.addressList.isNotEmpty,
+                    child: GestureDetector(
+                      onTap: () {
+                        cepController.clear();
+                        ufController.clear();
+                        cityController.clear();
+                        streetController.clear();
+                        store.clearSearchFields();
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        child: Text(
+                          'Limpar busca',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .copyWith(color: Colors.white),
+                        ),
                       ),
                     ),
-                  ),
-                );
-              })
+                  );
+                },
+              ),
             ],
           ),
         ),
