@@ -5,6 +5,7 @@ import 'package:cep_aberto_app/app/modules/home/domain/infra/repositories/i_viac
 
 import 'package:dartz/dartz.dart';
 
+import '../../infra/models/search_params.dart';
 import '../../presenter/usecases/i_viacep_usecase.dart';
 
 class ViacepUsecase implements IViacepUsecase {
@@ -12,10 +13,26 @@ class ViacepUsecase implements IViacepUsecase {
 
   ViacepUsecase(this._repository);
   @override
-  Future<Either<Failure, Cep>> call(String cep) async {
-    if (cep.isEmpty) {
+  Future<Either<Failure, Cep>> call(SearchParams params) async {
+    if (params.cep!.isEmpty) {
       return Left(GetAddressError(message: 'Cep Inválido'));
     }
-    return await _repository.searchAddress(cep);
+    return await _repository.searchAddress(params);
+  }
+
+  @override
+  Future<Either<Failure, List<Cep>>> getAddressByAddress(
+    SearchParams params,
+  ) async {
+    if (params.country!.isEmpty) {
+      return Left(GetAddressError(message: 'Cep Inválido'));
+    }
+    if (params.street!.isEmpty) {
+      return Left(GetAddressError(message: 'Cep Inválido'));
+    }
+    if (params.city!.isEmpty) {
+      return Left(GetAddressError(message: 'Cep Inválido'));
+    }
+    return await _repository.getAddressByAddress(params);
   }
 }

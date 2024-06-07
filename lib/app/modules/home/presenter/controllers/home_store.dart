@@ -7,16 +7,27 @@ import '../../infra/models/search_params.dart';
 
 part 'home_store.g.dart';
 
-class HomeStore = _HomeStoreBase with _$HomeStore;
+class HomeStore = HomeStoreBase with _$HomeStore;
 
-abstract class _HomeStoreBase with Store {
+abstract class HomeStoreBase with Store {
   final IViacepUsecase usecase;
 
   @observable
-  SearchParams params = SearchParams(cep: '74120070');
+  SearchParams params = SearchParams(
+    country: 'GO',
+    street: 'Avenida 85',
+    city: 'goiania',
+    cep: '74120070',
+  );
 
   @observable
   CepModel address = CepModel();
+
+  @observable
+  bool searchingByCep = true;
+
+  @observable
+  List<CepModel> addressList = List.empty(growable: true);
 
   @observable
   bool isLoading = false;
@@ -24,11 +35,22 @@ abstract class _HomeStoreBase with Store {
   @observable
   Failure? error;
 
-  _HomeStoreBase(this.usecase);
+  HomeStoreBase(this.usecase);
 
   @action
   void updateParams(SearchParams value) {
     params = value;
+  }
+
+  @action
+  void changeSearchMode() {
+    params = SearchParams(
+      country: 'GO',
+      street: 'Avenida 85',
+      city: 'goiania',
+      cep: '74120070',
+    );
+    searchingByCep = !searchingByCep;
   }
 
   @action
@@ -37,22 +59,44 @@ abstract class _HomeStoreBase with Store {
   }
 
   @action
-  Future<void> searchAddress() async {
+  Future<void> searchAddressByCep() async {
     setLoading(); // Ativa o estado de carregamento
 
-    final result = await usecase(params.cep!);
+    final result = await usecase(params);
 
     result.fold(
       (left) {
-        error = left; // Guarda o erro
-        address = CepModel(); // Reseta o endereço em caso de erro
+        error = left;
+        address = CepModel();
       },
       (right) {
-        address = right as CepModel; // Atualiza o endereço
-        error = null; // Reseta o erro
+        addressList = [];
+        address = right as CepModel;
+        error = null;
       },
     );
 
-    setLoading(); // Desativa o estado de carregamento
+    setLoading();
+  }
+
+  @action
+  Future<void> searchAddressByAddress() async {
+    setLoading(); // Ativa o estado de carregamento
+
+    final result = await usecase.getAddressByAddress(params);
+
+    result.fold(
+      (left) {
+        error = left;
+        address = CepModel();
+      },
+      (right) {
+        address = CepModel();
+        addressList = right as List<CepModel>;
+        error = null;
+      },
+    );
+
+    setLoading();
   }
 }

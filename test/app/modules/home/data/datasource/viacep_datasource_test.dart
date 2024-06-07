@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cep_aberto_app/app/modules/home/data/datasource/viacep_datasource.dart';
 import 'package:cep_aberto_app/app/modules/home/domain/errors/errors.dart';
 import 'package:cep_aberto_app/app/modules/home/infra/models/cep_model.dart';
+import 'package:cep_aberto_app/app/modules/home/infra/models/search_params.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -11,9 +12,15 @@ import '../../../../utils/result.dart';
 
 class DioMock extends Mock implements Dio {}
 
+class FakeSearchParams extends Fake implements SearchParams {}
+
 void main() {
   final client = DioMock();
   final datasource = ViacepDatasource(client);
+
+  setUp(() {
+    registerFallbackValue(FakeSearchParams());
+  });
   test(
     'Deve retornar um Cep',
     () async {
@@ -23,7 +30,8 @@ void main() {
             statusCode: 200,
             requestOptions: RequestOptions()),
       );
-      final result = await datasource.searchAddress('000000000');
+      final params = SearchParams(cep: '00000000');
+      final result = await datasource.searchAddress(params);
 
       expect(result, isA<CepModel>());
     },
@@ -39,7 +47,9 @@ void main() {
           data: null,
         ),
       );
-      final result = datasource.searchAddress('');
+      final params = SearchParams(cep: '');
+
+      final result = datasource.searchAddress(params);
 
       expect(result, throwsA(isA<ServerFailure>()));
     },

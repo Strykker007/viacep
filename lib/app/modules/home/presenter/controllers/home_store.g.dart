@@ -8,9 +8,9 @@ part of 'home_store.dart';
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
-mixin _$HomeStore on _HomeStoreBase, Store {
+mixin _$HomeStore on HomeStoreBase, Store {
   late final _$paramsAtom =
-      Atom(name: '_HomeStoreBase.params', context: context);
+      Atom(name: 'HomeStoreBase.params', context: context);
 
   @override
   SearchParams get params {
@@ -26,7 +26,7 @@ mixin _$HomeStore on _HomeStoreBase, Store {
   }
 
   late final _$addressAtom =
-      Atom(name: '_HomeStoreBase.address', context: context);
+      Atom(name: 'HomeStoreBase.address', context: context);
 
   @override
   CepModel get address {
@@ -41,8 +41,40 @@ mixin _$HomeStore on _HomeStoreBase, Store {
     });
   }
 
+  late final _$searchingByCepAtom =
+      Atom(name: 'HomeStoreBase.searchingByCep', context: context);
+
+  @override
+  bool get searchingByCep {
+    _$searchingByCepAtom.reportRead();
+    return super.searchingByCep;
+  }
+
+  @override
+  set searchingByCep(bool value) {
+    _$searchingByCepAtom.reportWrite(value, super.searchingByCep, () {
+      super.searchingByCep = value;
+    });
+  }
+
+  late final _$addressListAtom =
+      Atom(name: 'HomeStoreBase.addressList', context: context);
+
+  @override
+  List<CepModel> get addressList {
+    _$addressListAtom.reportRead();
+    return super.addressList;
+  }
+
+  @override
+  set addressList(List<CepModel> value) {
+    _$addressListAtom.reportWrite(value, super.addressList, () {
+      super.addressList = value;
+    });
+  }
+
   late final _$isLoadingAtom =
-      Atom(name: '_HomeStoreBase.isLoading', context: context);
+      Atom(name: 'HomeStoreBase.isLoading', context: context);
 
   @override
   bool get isLoading {
@@ -57,7 +89,7 @@ mixin _$HomeStore on _HomeStoreBase, Store {
     });
   }
 
-  late final _$errorAtom = Atom(name: '_HomeStoreBase.error', context: context);
+  late final _$errorAtom = Atom(name: 'HomeStoreBase.error', context: context);
 
   @override
   Failure? get error {
@@ -72,36 +104,57 @@ mixin _$HomeStore on _HomeStoreBase, Store {
     });
   }
 
-  late final _$searchAddressAsyncAction =
-      AsyncAction('_HomeStoreBase.searchAddress', context: context);
+  late final _$searchAddressByCepAsyncAction =
+      AsyncAction('HomeStoreBase.searchAddressByCep', context: context);
 
   @override
-  Future<void> searchAddress() {
-    return _$searchAddressAsyncAction.run(() => super.searchAddress());
+  Future<void> searchAddressByCep() {
+    return _$searchAddressByCepAsyncAction
+        .run(() => super.searchAddressByCep());
   }
 
-  late final _$_HomeStoreBaseActionController =
-      ActionController(name: '_HomeStoreBase', context: context);
+  late final _$searchAddressByAddressAsyncAction =
+      AsyncAction('HomeStoreBase.searchAddressByAddress', context: context);
+
+  @override
+  Future<void> searchAddressByAddress() {
+    return _$searchAddressByAddressAsyncAction
+        .run(() => super.searchAddressByAddress());
+  }
+
+  late final _$HomeStoreBaseActionController =
+      ActionController(name: 'HomeStoreBase', context: context);
 
   @override
   void updateParams(SearchParams value) {
-    final _$actionInfo = _$_HomeStoreBaseActionController.startAction(
-        name: '_HomeStoreBase.updateParams');
+    final _$actionInfo = _$HomeStoreBaseActionController.startAction(
+        name: 'HomeStoreBase.updateParams');
     try {
       return super.updateParams(value);
     } finally {
-      _$_HomeStoreBaseActionController.endAction(_$actionInfo);
+      _$HomeStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void changeSearchMode() {
+    final _$actionInfo = _$HomeStoreBaseActionController.startAction(
+        name: 'HomeStoreBase.changeSearchMode');
+    try {
+      return super.changeSearchMode();
+    } finally {
+      _$HomeStoreBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void setLoading() {
-    final _$actionInfo = _$_HomeStoreBaseActionController.startAction(
-        name: '_HomeStoreBase.setLoading');
+    final _$actionInfo = _$HomeStoreBaseActionController.startAction(
+        name: 'HomeStoreBase.setLoading');
     try {
       return super.setLoading();
     } finally {
-      _$_HomeStoreBaseActionController.endAction(_$actionInfo);
+      _$HomeStoreBaseActionController.endAction(_$actionInfo);
     }
   }
 
@@ -110,6 +163,8 @@ mixin _$HomeStore on _HomeStoreBase, Store {
     return '''
 params: ${params},
 address: ${address},
+searchingByCep: ${searchingByCep},
+addressList: ${addressList},
 isLoading: ${isLoading},
 error: ${error}
     ''';

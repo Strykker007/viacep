@@ -42,7 +42,7 @@ class _HomeMobilePageState extends State<HomeMobilePage> {
             ),
             IconButton(
               onPressed: () async {
-                store.searchAddress();
+                store.searchAddressByCep();
               },
               icon: const Icon(Icons.abc_outlined),
             ),

@@ -1,6 +1,8 @@
 import 'package:cep_aberto_app/app/modules/home/presenter/controllers/home_store.dart';
+import 'package:cep_aberto_app/app/modules/home/ui/desktop_web/components/data_table_component.dart';
 import 'package:cep_aberto_app/app/modules/home/ui/desktop_web/components/search_address.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class HomeDesktopPage extends StatefulWidget {
@@ -31,6 +33,15 @@ class _HomeDesktopPageState extends State<HomeDesktopPage> {
           child: Column(
             children: [
               const SearchAddress(),
+              const SizedBox(
+                height: 20,
+              ),
+              Observer(
+                builder: (context) {
+                  if (store.isLoading) return const CircularProgressIndicator();
+                  return const DataTableComponent();
+                },
+              ),
             ],
           ),
         ),
