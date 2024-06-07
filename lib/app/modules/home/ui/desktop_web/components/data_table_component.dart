@@ -92,7 +92,7 @@ class DataTableComponent extends StatelessWidget {
                         cells: [
                           DataCell(
                             Text(
-                              store.address.uf ?? '-',
+                              store.address.cep ?? '-',
                               style: Theme.of(context)
                                   .textTheme
                                   .headlineSmall!

@@ -1,3 +1,4 @@
+import 'package:cep_aberto_app/app/core/enums/filter_type_enum.dart';
 import 'package:cep_aberto_app/app/modules/home/infra/models/cep_model.dart';
 import 'package:cep_aberto_app/app/modules/home/presenter/usecases/i_viacep_usecase.dart';
 import 'package:mobx/mobx.dart';
@@ -28,6 +29,12 @@ abstract class HomeStoreBase with Store {
   bool isLoading = false;
 
   @observable
+  FilterTypeEnum filter = FilterTypeEnum.uf;
+
+  @observable
+  bool isAddressInvalidToSearch = true;
+
+  @observable
   Failure? error;
 
   HomeStoreBase(this.usecase);
@@ -37,6 +44,15 @@ abstract class HomeStoreBase with Store {
     params = value;
   }
 
+  void validateFields() {
+    isAddressInvalidToSearch = params.city == null ||
+        params.city!.isEmpty ||
+        params.country == null ||
+        params.country!.isEmpty ||
+        params.street == null ||
+        params.street!.isEmpty;
+  }
+
   @action
   void changeSearchMode() {
     params = SearchParams();
@@ -44,13 +60,13 @@ abstract class HomeStoreBase with Store {
   }
 
   @action
-  void setLoading() {
-    isLoading = !isLoading;
+  void setLoading(bool value) {
+    isLoading = value;
   }
 
   @action
   Future<void> searchAddressByCep() async {
-    setLoading(); // Ativa o estado de carregamento
+    setLoading(true); // Ativa o estado de carregamento
 
     final result = await usecase(params);
 
@@ -66,12 +82,18 @@ abstract class HomeStoreBase with Store {
       },
     );
 
-    setLoading();
+    setLoading(false);
+  }
+
+  @action
+  void clearSearchFields() {
+    address = CepModel();
+    addressList = [];
   }
 
   @action
   Future<void> searchAddressByAddress() async {
-    setLoading(); // Ativa o estado de carregamento
+    setLoading(true); // Ativa o estado de carregamento
 
     final result = await usecase.getAddressByAddress(params);
 
@@ -87,6 +109,6 @@ abstract class HomeStoreBase with Store {
       },
     );
 
-    setLoading();
+    setLoading(false);
   }
 }

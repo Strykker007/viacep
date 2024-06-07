@@ -1,10 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:cep_aberto_app/app/modules/home/infra/models/search_params.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-
 import 'package:cep_aberto_app/app/modules/home/presenter/controllers/home_store.dart';
+import '../../../../../core/utils/masks.dart';
 
 class SearchAddress extends StatefulWidget {
   const SearchAddress({
@@ -50,11 +49,29 @@ class _SearchAddressState extends State<SearchAddress> {
                         child: TextField(
                           controller: cepController,
                           onChanged: (value) {
-                            setState(() {
-                              store.params.cep = value;
-                              store.updateParams(store.params);
-                            });
+                            setState(
+                              () {
+                                store.params.cep = value.replaceAll(
+                                  RegExp(r'[^\d]'),
+                                  '',
+                                );
+                                store.updateParams(store.params);
+                              },
+                            );
                           },
+                          inputFormatters: [
+                            Masks.generateMask(
+                              '##.###-###',
+                              initialText: cepController.text,
+                            ),
+                          ],
+                          textInputAction: TextInputAction.done,
+                          onSubmitted:
+                              cepController.text.isEmpty || store.isLoading
+                                  ? null
+                                  : (value) {
+                                      store.searchAddressByCep();
+                                    },
                           decoration: InputDecoration(
                             hintText: 'Digite o cep aqui',
                             border: OutlineInputBorder(
@@ -72,9 +89,12 @@ class _SearchAddressState extends State<SearchAddress> {
                                             .withOpacity(0.3)
                                         : Theme.of(context).colorScheme.primary,
                                   ),
-                                  onPressed: () {
-                                    store.searchAddressByCep();
-                                  },
+                                  onPressed: cepController.text.isNotEmpty ||
+                                          store.isLoading
+                                      ? () {
+                                          store.searchAddressByCep();
+                                        }
+                                      : null,
                                 );
                               },
                             ),
@@ -93,9 +113,17 @@ class _SearchAddressState extends State<SearchAddress> {
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                 ),
+                                textInputAction: TextInputAction.done,
+                                onSubmitted: store.isAddressInvalidToSearch ||
+                                        store.isLoading
+                                    ? null
+                                    : (value) {
+                                        store.searchAddressByAddress();
+                                      },
                                 onChanged: (value) {
                                   store.params.country = value;
                                   store.updateParams(store.params);
+                                  store.validateFields();
                                 },
                               ),
                             ),
@@ -111,9 +139,17 @@ class _SearchAddressState extends State<SearchAddress> {
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                 ),
+                                textInputAction: TextInputAction.done,
+                                onSubmitted: store.isAddressInvalidToSearch ||
+                                        store.isLoading
+                                    ? null
+                                    : (value) {
+                                        store.searchAddressByAddress();
+                                      },
                                 onChanged: (value) {
                                   store.params.city = value;
                                   store.updateParams(store.params);
+                                  store.validateFields();
                                 },
                               ),
                             ),
@@ -129,21 +165,42 @@ class _SearchAddressState extends State<SearchAddress> {
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                 ),
+                                textInputAction: TextInputAction.done,
+                                onSubmitted: store.isAddressInvalidToSearch ||
+                                        store.isLoading
+                                    ? null
+                                    : (value) {
+                                        store.searchAddressByAddress();
+                                      },
                                 onChanged: (value) {
                                   store.params.street = value;
                                   store.updateParams(store.params);
+                                  store.validateFields();
                                 },
                               ),
                             ),
                             const SizedBox(
                               width: 10,
                             ),
-                            IconButton(
-                              onPressed: () {
-                                store.searchAddressByAddress();
-                              },
-                              icon: const Icon(Icons.search),
-                            ),
+                            Observer(builder: (context) {
+                              return IconButton(
+                                onPressed: store.isAddressInvalidToSearch ||
+                                        store.isLoading
+                                    ? null
+                                    : () {
+                                        store.searchAddressByAddress();
+                                      },
+                                icon: Icon(
+                                  Icons.search,
+                                  color: store.isAddressInvalidToSearch
+                                      ? Theme.of(context)
+                                          .colorScheme
+                                          .primary
+                                          .withOpacity(0.3)
+                                      : Theme.of(context).colorScheme.primary,
+                                ),
+                              );
+                            }),
                           ],
                         ),
                       ),
@@ -169,6 +226,29 @@ class _SearchAddressState extends State<SearchAddress> {
                 },
               ),
               const Spacer(),
+              GestureDetector(
+                onTap: () {
+                  cepController.clear();
+                  ufController.clear();
+                  cityController.clear();
+                  streetController.clear();
+                  store.clearSearchFields();
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  child: Text(
+                    'Limpar busca',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium!
+                        .copyWith(color: Colors.white),
+                  ),
+                ),
+              )
             ],
           ),
         ),

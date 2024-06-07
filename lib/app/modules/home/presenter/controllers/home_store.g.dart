@@ -89,6 +89,39 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
+  late final _$filterAtom =
+      Atom(name: 'HomeStoreBase.filter', context: context);
+
+  @override
+  FilterTypeEnum get filter {
+    _$filterAtom.reportRead();
+    return super.filter;
+  }
+
+  @override
+  set filter(FilterTypeEnum value) {
+    _$filterAtom.reportWrite(value, super.filter, () {
+      super.filter = value;
+    });
+  }
+
+  late final _$isAddressInvalidToSearchAtom =
+      Atom(name: 'HomeStoreBase.isAddressInvalidToSearch', context: context);
+
+  @override
+  bool get isAddressInvalidToSearch {
+    _$isAddressInvalidToSearchAtom.reportRead();
+    return super.isAddressInvalidToSearch;
+  }
+
+  @override
+  set isAddressInvalidToSearch(bool value) {
+    _$isAddressInvalidToSearchAtom
+        .reportWrite(value, super.isAddressInvalidToSearch, () {
+      super.isAddressInvalidToSearch = value;
+    });
+  }
+
   late final _$errorAtom = Atom(name: 'HomeStoreBase.error', context: context);
 
   @override
@@ -148,11 +181,11 @@ mixin _$HomeStore on HomeStoreBase, Store {
   }
 
   @override
-  void setLoading() {
+  void setLoading(bool value) {
     final _$actionInfo = _$HomeStoreBaseActionController.startAction(
         name: 'HomeStoreBase.setLoading');
     try {
-      return super.setLoading();
+      return super.setLoading(value);
     } finally {
       _$HomeStoreBaseActionController.endAction(_$actionInfo);
     }
@@ -166,6 +199,8 @@ address: ${address},
 searchingByCep: ${searchingByCep},
 addressList: ${addressList},
 isLoading: ${isLoading},
+filter: ${filter},
+isAddressInvalidToSearch: ${isAddressInvalidToSearch},
 error: ${error}
     ''';
   }
