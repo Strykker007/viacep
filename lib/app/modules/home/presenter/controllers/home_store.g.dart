@@ -192,6 +192,17 @@ mixin _$HomeStore on HomeStoreBase, Store {
   }
 
   @override
+  void clearSearchFields() {
+    final _$actionInfo = _$HomeStoreBaseActionController.startAction(
+        name: 'HomeStoreBase.clearSearchFields');
+    try {
+      return super.clearSearchFields();
+    } finally {
+      _$HomeStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 params: ${params},

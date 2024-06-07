@@ -15,6 +15,7 @@ class EmptyComponent extends StatelessWidget {
         Text(
           'Nenhum dado a ser exibido, para começar informe um cep ou endereço nos campos acima!',
           style: Theme.of(context).textTheme.bodyMedium,
+          textAlign: TextAlign.center,
         ),
       ],
     );

@@ -6,7 +6,6 @@ import 'package:cep_aberto_app/app/modules/home/ui/desktop_web/components/search
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:lottie/lottie.dart';
 
 class HomeDesktopPage extends StatefulWidget {
   const HomeDesktopPage({super.key});
@@ -39,9 +38,7 @@ class _HomeDesktopPageState extends State<HomeDesktopPage> {
                 padding: EdgeInsets.all(10.0),
                 child: SearchAddress(),
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20),
               Observer(
                 builder: (context) {
                   if (store.error != null) {
@@ -50,9 +47,7 @@ class _HomeDesktopPageState extends State<HomeDesktopPage> {
                   if (store.address.cep == null && store.addressList.isEmpty) {
                     return const EmptyComponent();
                   }
-                  if (store.isLoading) {
-                    return LottieBuilder.asset('assets/loading.json');
-                  }
+                  if (store.isLoading) {}
                   return const DataTableComponent();
                 },
               ),
