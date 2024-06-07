@@ -72,6 +72,7 @@ class _SearchAddressMobileState extends State<SearchAddressMobile> {
                                   ? null
                                   : (value) {
                                       store.searchAddressByCep();
+                                      FocusScope.of(context).unfocus();
                                     },
                           decoration: InputDecoration(
                             hintText: 'Digite o cep aqui',
@@ -94,6 +95,7 @@ class _SearchAddressMobileState extends State<SearchAddressMobile> {
                                           store.isLoading
                                       ? () {
                                           store.searchAddressByCep();
+                                          FocusScope.of(context).unfocus();
                                         }
                                       : null,
                                 );
@@ -101,99 +103,109 @@ class _SearchAddressMobileState extends State<SearchAddressMobile> {
                             ),
                           ),
                         )
-                      : Column(
-                          children: [
-                            TextField(
-                              controller: ufController,
-                              decoration: InputDecoration(
-                                hintText: 'UF',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
+                      : Observer(builder: (context) {
+                          return Visibility(
+                            visible: store.addressList.isEmpty,
+                            child: Column(
+                              children: [
+                                TextField(
+                                  controller: ufController,
+                                  decoration: InputDecoration(
+                                    hintText: 'UF',
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  textInputAction: TextInputAction.done,
+                                  onSubmitted: store.isAddressInvalidToSearch ||
+                                          store.isLoading
+                                      ? null
+                                      : (value) {
+                                          store.searchAddressByAddress();
+                                          FocusScope.of(context).unfocus();
+                                        },
+                                  onChanged: (value) {
+                                    store.params.country = value;
+                                    store.updateParams(store.params);
+                                    store.validateFields();
+                                  },
                                 ),
-                              ),
-                              textInputAction: TextInputAction.done,
-                              onSubmitted: store.isAddressInvalidToSearch ||
-                                      store.isLoading
-                                  ? null
-                                  : (value) {
-                                      store.searchAddressByAddress();
-                                    },
-                              onChanged: (value) {
-                                store.params.country = value;
-                                store.updateParams(store.params);
-                                store.validateFields();
-                              },
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            TextField(
-                              controller: cityController,
-                              decoration: InputDecoration(
-                                hintText: 'Cidade',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
+                                const SizedBox(
+                                  height: 10,
                                 ),
-                              ),
-                              textInputAction: TextInputAction.done,
-                              onSubmitted: store.isAddressInvalidToSearch ||
-                                      store.isLoading
-                                  ? null
-                                  : (value) {
-                                      store.searchAddressByAddress();
-                                    },
-                              onChanged: (value) {
-                                store.params.city = value;
-                                store.updateParams(store.params);
-                                store.validateFields();
-                              },
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            TextField(
-                              controller: streetController,
-                              decoration: InputDecoration(
-                                hintText: 'Logradouro',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
+                                TextField(
+                                  controller: cityController,
+                                  decoration: InputDecoration(
+                                    hintText: 'Cidade',
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  textInputAction: TextInputAction.done,
+                                  onSubmitted: store.isAddressInvalidToSearch ||
+                                          store.isLoading
+                                      ? null
+                                      : (value) {
+                                          store.searchAddressByAddress();
+                                          FocusScope.of(context).unfocus();
+                                        },
+                                  onChanged: (value) {
+                                    store.params.city = value;
+                                    store.updateParams(store.params);
+                                    store.validateFields();
+                                  },
                                 ),
-                              ),
-                              textInputAction: TextInputAction.done,
-                              onSubmitted: store.isAddressInvalidToSearch ||
-                                      store.isLoading
-                                  ? null
-                                  : (value) {
-                                      store.searchAddressByAddress();
-                                    },
-                              onChanged: (value) {
-                                store.params.street = value;
-                                store.updateParams(store.params);
-                                store.validateFields();
-                              },
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Observer(
-                              builder: (context) {
-                                return Row(
-                                  children: [
-                                    Expanded(
-                                      child: GestureDetector(
-                                        onTap: store.isAddressInvalidToSearch ||
-                                                store.isLoading
-                                            ? null
-                                            : () {
-                                                store.searchAddressByAddress();
-                                              },
-                                        child: Container(
-                                          height: 50,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                            color:
-                                                store.isAddressInvalidToSearch
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                TextField(
+                                  controller: streetController,
+                                  decoration: InputDecoration(
+                                    hintText: 'Logradouro',
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  textInputAction: TextInputAction.done,
+                                  onSubmitted: store.isAddressInvalidToSearch ||
+                                          store.isLoading
+                                      ? null
+                                      : (value) {
+                                          store.searchAddressByAddress();
+                                          FocusScope.of(context).unfocus();
+                                        },
+                                  onChanged: (value) {
+                                    store.params.street = value;
+                                    store.updateParams(store.params);
+                                    store.validateFields();
+                                  },
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Observer(
+                                  builder: (context) {
+                                    return Row(
+                                      children: [
+                                        Expanded(
+                                          child: GestureDetector(
+                                            onTap:
+                                                store.isAddressInvalidToSearch ||
+                                                        store.isLoading
+                                                    ? null
+                                                    : () {
+                                                        store
+                                                            .searchAddressByAddress();
+                                                        FocusScope.of(context)
+                                                            .unfocus();
+                                                      },
+                                            child: Container(
+                                              height: 50,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                                color: store
+                                                        .isAddressInvalidToSearch
                                                     ? Theme.of(context)
                                                         .colorScheme
                                                         .primary
@@ -201,24 +213,34 @@ class _SearchAddressMobileState extends State<SearchAddressMobile> {
                                                     : Theme.of(context)
                                                         .colorScheme
                                                         .primary,
-                                          ),
-                                          child: Center(
-                                            child: Text(
-                                              'Buscar',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleMedium,
+                                              ),
+                                              child: Center(
+                                                child: Text(
+                                                  'Buscar',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .titleMedium!
+                                                      .copyWith(
+                                                        color: store
+                                                                .isAddressInvalidToSearch
+                                                            ? Theme.of(context)
+                                                                .colorScheme
+                                                                .primary
+                                                            : Colors.white,
+                                                      ),
+                                                ),
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              },
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          );
+                        }),
                 ),
               ),
               const SizedBox(

@@ -226,29 +226,35 @@ class _SearchAddressState extends State<SearchAddress> {
                 },
               ),
               const Spacer(),
-              GestureDetector(
-                onTap: () {
-                  cepController.clear();
-                  ufController.clear();
-                  cityController.clear();
-                  streetController.clear();
-                  store.clearSearchFields();
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Theme.of(context).colorScheme.primary,
+              Observer(builder: (context) {
+                return Visibility(
+                  visible:
+                      store.address.cep != null || store.addressList.isNotEmpty,
+                  child: GestureDetector(
+                    onTap: () {
+                      cepController.clear();
+                      ufController.clear();
+                      cityController.clear();
+                      streetController.clear();
+                      store.clearSearchFields();
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(15),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      child: Text(
+                        'Limpar busca',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium!
+                            .copyWith(color: Colors.white),
+                      ),
+                    ),
                   ),
-                  child: Text(
-                    'Limpar busca',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium!
-                        .copyWith(color: Colors.white),
-                  ),
-                ),
-              )
+                );
+              })
             ],
           ),
         ),

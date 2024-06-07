@@ -1,5 +1,7 @@
 import 'package:cep_aberto_app/app/modules/home/ui/desktop_web/components/loading_component.dart';
+import 'package:cep_aberto_app/app/modules/home/ui/mobile/components/cep_result_search_component.dart';
 import 'package:cep_aberto_app/app/modules/home/ui/mobile/components/search_address_mobile.dart';
+import 'package:cep_aberto_app/app/modules/home/ui/mobile/components/text_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -28,45 +30,65 @@ class _HomeMobilePageState extends State<HomeMobilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Home Mobile Page',
-          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                color: Colors.white,
-              ),
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Home Mobile Page',
+            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: Colors.white,
+                ),
+          ),
         ),
-      ),
-      body: Container(
-        padding: const EdgeInsets.all(15.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const Padding(
-                padding: EdgeInsets.all(10.0),
-                child: SearchAddressMobile(),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Observer(
-                builder: (context) {
-                  if (store.error != null) {
-                    return ErrorComponent(message: store.error!.message);
-                  }
-                  if (store.address.cep == null && store.addressList.isEmpty) {
-                    return const EmptyComponent();
-                  }
-                  if (store.isLoading) {
-                    return const LoadingComponent();
-                  }
-                  if (store.address.cep != null) {
+        body: Container(
+          padding: const EdgeInsets.all(15.0),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: SearchAddressMobile(),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Observer(
+                  builder: (context) {
+                    if (store.error != null) {
+                      return ErrorComponent(message: store.error!.message);
+                    }
+                    if (store.address.cep == null &&
+                        store.addressList.isEmpty) {
+                      return const EmptyComponent();
+                    }
+                    if (store.isLoading) {
+                      return const LoadingComponent();
+                    }
+                    if (store.address.cep != null) {
+                      return CepResultSearchComponent(
+                        item: store.address,
+                      );
+                    }
+                    if (store.addressList.isNotEmpty) {
+                      return ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: store.addressList.length,
+                        itemBuilder: (context, index) {
+                          return CepResultSearchComponent(
+                            item: store.addressList[index],
+                          );
+                        },
+                      );
+                    }
                     return Container();
-                  }
-                  return Container();
-                },
-              ),
-            ],
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
