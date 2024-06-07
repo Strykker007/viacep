@@ -13,12 +13,7 @@ abstract class HomeStoreBase with Store {
   final IViacepUsecase usecase;
 
   @observable
-  SearchParams params = SearchParams(
-    country: 'GO',
-    street: 'Avenida 85',
-    city: 'goiania',
-    cep: '74120070',
-  );
+  SearchParams params = SearchParams();
 
   @observable
   CepModel address = CepModel();
@@ -44,12 +39,7 @@ abstract class HomeStoreBase with Store {
 
   @action
   void changeSearchMode() {
-    params = SearchParams(
-      country: 'GO',
-      street: 'Avenida 85',
-      city: 'goiania',
-      cep: '74120070',
-    );
+    params = SearchParams();
     searchingByCep = !searchingByCep;
   }
 

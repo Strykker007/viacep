@@ -50,20 +50,30 @@ class _SearchAddressState extends State<SearchAddress> {
                         child: TextField(
                           controller: cepController,
                           onChanged: (value) {
-                            SearchParams params = SearchParams(cep: value);
-                            store.updateParams(params);
+                            setState(() {
+                              store.params.cep = value;
+                              store.updateParams(store.params);
+                            });
                           },
                           decoration: InputDecoration(
                             hintText: 'Digite o cep aqui',
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            suffixIcon: IconButton(
-                              icon: const Icon(Icons.search),
-                              onPressed: () {
-                                store.searchAddressByCep().then(
-                                  (onValue) {
-                                    cepController.clear();
+                            suffixIcon: Observer(
+                              builder: (context) {
+                                return IconButton(
+                                  icon: Icon(
+                                    Icons.search,
+                                    color: cepController.text.isEmpty
+                                        ? Theme.of(context)
+                                            .colorScheme
+                                            .primary
+                                            .withOpacity(0.3)
+                                        : Theme.of(context).colorScheme.primary,
+                                  ),
+                                  onPressed: () {
+                                    store.searchAddressByCep();
                                   },
                                 );
                               },
@@ -76,12 +86,17 @@ class _SearchAddressState extends State<SearchAddress> {
                           children: [
                             Expanded(
                               child: TextField(
+                                controller: ufController,
                                 decoration: InputDecoration(
                                   hintText: 'UF',
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                 ),
+                                onChanged: (value) {
+                                  store.params.country = value;
+                                  store.updateParams(store.params);
+                                },
                               ),
                             ),
                             const SizedBox(
@@ -89,12 +104,17 @@ class _SearchAddressState extends State<SearchAddress> {
                             ),
                             Expanded(
                               child: TextField(
+                                controller: cityController,
                                 decoration: InputDecoration(
                                   hintText: 'Cidade',
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                 ),
+                                onChanged: (value) {
+                                  store.params.city = value;
+                                  store.updateParams(store.params);
+                                },
                               ),
                             ),
                             const SizedBox(
@@ -102,12 +122,17 @@ class _SearchAddressState extends State<SearchAddress> {
                             ),
                             Expanded(
                               child: TextField(
+                                controller: streetController,
                                 decoration: InputDecoration(
                                   hintText: 'Logradouro',
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                 ),
+                                onChanged: (value) {
+                                  store.params.street = value;
+                                  store.updateParams(store.params);
+                                },
                               ),
                             ),
                             const SizedBox(
