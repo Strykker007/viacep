@@ -37,13 +37,13 @@ abstract class HomeStoreBase with Store {
   Failure? error;
 
   @observable
-  ObservableList<String> uniqueLocalidades = ObservableList<String>();
+  ObservableList<String> uniqueBairros = ObservableList<String>();
 
   @observable
   ObservableList<String> uniqueUFs = ObservableList<String>();
 
   @observable
-  String? selectedLocalidade;
+  String? selectedBairro;
 
   @observable
   String? selectedUF;
@@ -55,17 +55,17 @@ abstract class HomeStoreBase with Store {
   }
 
   void _extractUniqueValues() {
-    final Set<String> localidades = {};
+    final Set<String> bairros = {};
     final Set<String> ufs = {};
     for (final cepModel in addressList) {
-      if (cepModel.localidade != null) {
-        localidades.add(cepModel.localidade!);
+      if (cepModel.bairro != null) {
+        bairros.add(cepModel.bairro!);
       }
       if (cepModel.uf != null) {
         ufs.add(cepModel.uf!);
       }
     }
-    uniqueLocalidades = ObservableList<String>.of(localidades);
+    uniqueBairros = ObservableList<String>.of(bairros);
     uniqueUFs = ObservableList<String>.of(ufs);
     filteredAddressList = ObservableList<CepModel>.of(addressList);
   }
@@ -120,9 +120,9 @@ abstract class HomeStoreBase with Store {
     address = CepModel();
     addressList = ObservableList();
     filteredAddressList = ObservableList();
-    uniqueLocalidades = ObservableList();
+    uniqueBairros = ObservableList();
     uniqueUFs = ObservableList();
-    selectedLocalidade = null;
+    selectedBairro = null;
     selectedUF = null;
   }
 
@@ -148,11 +148,11 @@ abstract class HomeStoreBase with Store {
   }
 
   @action
-  void filterAddressListByLocalidade(String? localidade) {
-    if (localidade != null && localidade.isNotEmpty) {
+  void filterAddressListByBairro(String? bairro) {
+    if (bairro != null && bairro.isNotEmpty) {
       filteredAddressList = ObservableList<CepModel>.of(
         addressList
-            .where((address) => address.localidade == localidade)
+            .where((address) => address.bairro == bairro)
             .toList(),
       );
     } else {

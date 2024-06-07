@@ -69,6 +69,18 @@ class _HomeMobilePageState extends State<HomeMobilePage> {
                         item: store.address,
                       );
                     }
+                    if (store.filteredAddressList.isNotEmpty) {
+                      return ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: store.filteredAddressList.length,
+                        itemBuilder: (context, index) {
+                          return CepResultSearchComponent(
+                            item: store.filteredAddressList[index],
+                          );
+                        },
+                      );
+                    }
                     if (store.addressList.isNotEmpty) {
                       return ListView.builder(
                         physics: const NeverScrollableScrollPhysics(),

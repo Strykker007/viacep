@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:cep_aberto_app/app/modules/home/ui/mobile/components/filter_component_mobile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -246,6 +247,15 @@ class _SearchAddressMobileState extends State<SearchAddressMobile> {
               const SizedBox(
                 height: 10,
               ),
+              Observer(builder: (context) {
+                return Visibility(
+                  visible: store.addressList.isNotEmpty,
+                  child: const FilterButtonsComponent(),
+                );
+              }),
+              const SizedBox(
+                height: 10,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -299,7 +309,7 @@ class _SearchAddressMobileState extends State<SearchAddressMobile> {
                     },
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ),

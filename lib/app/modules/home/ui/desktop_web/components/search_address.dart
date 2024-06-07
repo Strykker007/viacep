@@ -253,23 +253,24 @@ class _SearchAddressState extends State<SearchAddress> {
               Observer(
                 builder: (context) {
                   return Visibility(
-                    visible: store.uniqueLocalidades.isNotEmpty,
+                    visible: store.uniqueBairros.isNotEmpty,
                     child: DropdownButton<String>(
                       hint: const Text("Selecione Localidade"),
-                      value: store.selectedLocalidade,
+                      value: store.selectedBairro,
                       dropdownColor: Colors.white,
                       borderRadius: BorderRadius.circular(10),
                       onChanged: (String? newValue) {
-                        store.selectedLocalidade = newValue;
-                        store.filterAddressListByLocalidade(newValue);
+                        store.selectedBairro = newValue;
+                        store.filterAddressListByBairro(newValue);
                       },
-                      items: store.uniqueLocalidades
-                          .map<DropdownMenuItem<String>>((String localidade) {
-                        return DropdownMenuItem<String>(
-                          value: localidade,
-                          child: Text(localidade),
-                        );
-                      }).toList(),
+                      items: store.uniqueBairros.map<DropdownMenuItem<String>>(
+                        (String localidade) {
+                          return DropdownMenuItem<String>(
+                            value: localidade,
+                            child: Text(localidade),
+                          );
+                        },
+                      ).toList(),
                     ),
                   );
                 },

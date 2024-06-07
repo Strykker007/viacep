@@ -137,19 +137,19 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
-  late final _$uniqueLocalidadesAtom =
-      Atom(name: 'HomeStoreBase.uniqueLocalidades', context: context);
+  late final _$uniqueBairrosAtom =
+      Atom(name: 'HomeStoreBase.uniqueBairros', context: context);
 
   @override
-  ObservableList<String> get uniqueLocalidades {
-    _$uniqueLocalidadesAtom.reportRead();
-    return super.uniqueLocalidades;
+  ObservableList<String> get uniqueBairros {
+    _$uniqueBairrosAtom.reportRead();
+    return super.uniqueBairros;
   }
 
   @override
-  set uniqueLocalidades(ObservableList<String> value) {
-    _$uniqueLocalidadesAtom.reportWrite(value, super.uniqueLocalidades, () {
-      super.uniqueLocalidades = value;
+  set uniqueBairros(ObservableList<String> value) {
+    _$uniqueBairrosAtom.reportWrite(value, super.uniqueBairros, () {
+      super.uniqueBairros = value;
     });
   }
 
@@ -169,19 +169,19 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
-  late final _$selectedLocalidadeAtom =
-      Atom(name: 'HomeStoreBase.selectedLocalidade', context: context);
+  late final _$selectedBairroAtom =
+      Atom(name: 'HomeStoreBase.selectedBairro', context: context);
 
   @override
-  String? get selectedLocalidade {
-    _$selectedLocalidadeAtom.reportRead();
-    return super.selectedLocalidade;
+  String? get selectedBairro {
+    _$selectedBairroAtom.reportRead();
+    return super.selectedBairro;
   }
 
   @override
-  set selectedLocalidade(String? value) {
-    _$selectedLocalidadeAtom.reportWrite(value, super.selectedLocalidade, () {
-      super.selectedLocalidade = value;
+  set selectedBairro(String? value) {
+    _$selectedBairroAtom.reportWrite(value, super.selectedBairro, () {
+      super.selectedBairro = value;
     });
   }
 
@@ -267,11 +267,11 @@ mixin _$HomeStore on HomeStoreBase, Store {
   }
 
   @override
-  void filterAddressListByLocalidade(String? localidade) {
+  void filterAddressListByBairro(String? bairro) {
     final _$actionInfo = _$HomeStoreBaseActionController.startAction(
-        name: 'HomeStoreBase.filterAddressListByLocalidade');
+        name: 'HomeStoreBase.filterAddressListByBairro');
     try {
-      return super.filterAddressListByLocalidade(localidade);
+      return super.filterAddressListByBairro(bairro);
     } finally {
       _$HomeStoreBaseActionController.endAction(_$actionInfo);
     }
@@ -299,9 +299,9 @@ filteredAddressList: ${filteredAddressList},
 isLoading: ${isLoading},
 isAddressInvalidToSearch: ${isAddressInvalidToSearch},
 error: ${error},
-uniqueLocalidades: ${uniqueLocalidades},
+uniqueBairros: ${uniqueBairros},
 uniqueUFs: ${uniqueUFs},
-selectedLocalidade: ${selectedLocalidade},
+selectedBairro: ${selectedBairro},
 selectedUF: ${selectedUF}
     ''';
   }
