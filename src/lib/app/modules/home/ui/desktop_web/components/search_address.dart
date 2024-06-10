@@ -41,239 +41,257 @@ class _SearchAddressState extends State<SearchAddress> {
             borderRadius: BorderRadius.circular(20),
             color: Colors.white,
           ),
-          child: Row(
+          child: Column(
             children: [
-              Observer(
-                builder: (context) => store.searchingByCep
-                    ? Expanded(
-                        child: TextField(
-                          controller: cepController,
-                          onChanged: (value) {
-                            setState(
-                              () {
-                                store.params.cep = value.replaceAll(
-                                  RegExp(r'[^\d]'),
-                                  '',
+              Row(
+                children: [
+                  Observer(
+                    builder: (context) => store.searchingByCep
+                        ? Expanded(
+                            child: TextField(
+                              controller: cepController,
+                              onChanged: (value) {
+                                setState(
+                                  () {
+                                    store.params.cep = value.replaceAll(
+                                      RegExp(r'[^\d]'),
+                                      '',
+                                    );
+                                    store.updateParams(store.params);
+                                  },
                                 );
-                                store.updateParams(store.params);
                               },
-                            );
-                          },
-                          inputFormatters: [
-                            Masks.generateMask(
-                              '##.###-###',
-                              initialText: cepController.text,
-                            ),
-                          ],
-                          textInputAction: TextInputAction.done,
-                          onSubmitted:
-                              cepController.text.isEmpty || store.isLoading
-                                  ? null
-                                  : (value) {
-                                      store.searchAddressByCep();
-                                    },
-                          decoration: InputDecoration(
-                            hintText: 'Digite o cep aqui',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            suffixIcon: Observer(
-                              builder: (context) {
-                                return IconButton(
-                                  icon: Icon(
-                                    Icons.search,
-                                    color: cepController.text.isEmpty
-                                        ? Theme.of(context)
-                                            .colorScheme
-                                            .primary
-                                            .withOpacity(0.3)
-                                        : Theme.of(context).colorScheme.primary,
-                                  ),
-                                  onPressed: cepController.text.isNotEmpty ||
-                                          store.isLoading
-                                      ? () {
+                              inputFormatters: [
+                                Masks.generateMask(
+                                  '##.###-###',
+                                  initialText: cepController.text,
+                                ),
+                              ],
+                              textInputAction: TextInputAction.done,
+                              onSubmitted:
+                                  cepController.text.isEmpty || store.isLoading
+                                      ? null
+                                      : (value) {
                                           store.searchAddressByCep();
-                                        }
-                                      : null,
-                                );
-                              },
+                                        },
+                              decoration: InputDecoration(
+                                hintText: 'Digite o cep aqui',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                suffixIcon: Observer(
+                                  builder: (context) {
+                                    return IconButton(
+                                      icon: Icon(
+                                        Icons.search,
+                                        color: cepController.text.isEmpty
+                                            ? Theme.of(context)
+                                                .colorScheme
+                                                .primary
+                                                .withOpacity(0.3)
+                                            : Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                      ),
+                                      onPressed:
+                                          cepController.text.isNotEmpty ||
+                                                  store.isLoading
+                                              ? () {
+                                                  store.searchAddressByCep();
+                                                }
+                                              : null,
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          )
+                        : Expanded(
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: TextField(
+                                    controller: ufController,
+                                    decoration: InputDecoration(
+                                      hintText: 'UF',
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                    ),
+                                    textInputAction: TextInputAction.done,
+                                    onSubmitted:
+                                        store.isAddressInvalidToSearch ||
+                                                store.isLoading
+                                            ? null
+                                            : (value) {
+                                                store.searchAddressByAddress();
+                                              },
+                                    onChanged: (value) {
+                                      store.params.country = value;
+                                      store.updateParams(store.params);
+                                      store.validateFields();
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Expanded(
+                                  child: TextField(
+                                    controller: cityController,
+                                    decoration: InputDecoration(
+                                      hintText: 'Cidade',
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                    ),
+                                    textInputAction: TextInputAction.done,
+                                    onSubmitted:
+                                        store.isAddressInvalidToSearch ||
+                                                store.isLoading
+                                            ? null
+                                            : (value) {
+                                                store.searchAddressByAddress();
+                                              },
+                                    onChanged: (value) {
+                                      store.params.city = value;
+                                      store.updateParams(store.params);
+                                      store.validateFields();
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Expanded(
+                                  child: TextField(
+                                    controller: streetController,
+                                    decoration: InputDecoration(
+                                      hintText: 'Logradouro',
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                    ),
+                                    textInputAction: TextInputAction.done,
+                                    onSubmitted:
+                                        store.isAddressInvalidToSearch ||
+                                                store.isLoading
+                                            ? null
+                                            : (value) {
+                                                store.searchAddressByAddress();
+                                              },
+                                    onChanged: (value) {
+                                      store.params.street = value;
+                                      store.updateParams(store.params);
+                                      store.validateFields();
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Observer(builder: (context) {
+                                  return IconButton(
+                                    onPressed: store.isAddressInvalidToSearch ||
+                                            store.isLoading
+                                        ? null
+                                        : () {
+                                            store.searchAddressByAddress();
+                                          },
+                                    icon: Icon(
+                                      Icons.search,
+                                      color: store.isAddressInvalidToSearch
+                                          ? Theme.of(context)
+                                              .colorScheme
+                                              .primary
+                                              .withOpacity(0.3)
+                                          : Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                    ),
+                                  );
+                                }),
+                              ],
                             ),
                           ),
-                        ),
-                      )
-                    : Expanded(
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: TextField(
-                                controller: ufController,
-                                decoration: InputDecoration(
-                                  hintText: 'UF',
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                ),
-                                textInputAction: TextInputAction.done,
-                                onSubmitted: store.isAddressInvalidToSearch ||
-                                        store.isLoading
-                                    ? null
-                                    : (value) {
-                                        store.searchAddressByAddress();
-                                      },
-                                onChanged: (value) {
-                                  store.params.country = value;
-                                  store.updateParams(store.params);
-                                  store.validateFields();
-                                },
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Expanded(
-                              child: TextField(
-                                controller: cityController,
-                                decoration: InputDecoration(
-                                  hintText: 'Cidade',
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                ),
-                                textInputAction: TextInputAction.done,
-                                onSubmitted: store.isAddressInvalidToSearch ||
-                                        store.isLoading
-                                    ? null
-                                    : (value) {
-                                        store.searchAddressByAddress();
-                                      },
-                                onChanged: (value) {
-                                  store.params.city = value;
-                                  store.updateParams(store.params);
-                                  store.validateFields();
-                                },
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Expanded(
-                              child: TextField(
-                                controller: streetController,
-                                decoration: InputDecoration(
-                                  hintText: 'Logradouro',
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                ),
-                                textInputAction: TextInputAction.done,
-                                onSubmitted: store.isAddressInvalidToSearch ||
-                                        store.isLoading
-                                    ? null
-                                    : (value) {
-                                        store.searchAddressByAddress();
-                                      },
-                                onChanged: (value) {
-                                  store.params.street = value;
-                                  store.updateParams(store.params);
-                                  store.validateFields();
-                                },
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Observer(builder: (context) {
-                              return IconButton(
-                                onPressed: store.isAddressInvalidToSearch ||
-                                        store.isLoading
-                                    ? null
-                                    : () {
-                                        store.searchAddressByAddress();
-                                      },
-                                icon: Icon(
-                                  Icons.search,
-                                  color: store.isAddressInvalidToSearch
-                                      ? Theme.of(context)
-                                          .colorScheme
-                                          .primary
-                                          .withOpacity(0.3)
-                                      : Theme.of(context).colorScheme.primary,
-                                ),
-                              );
-                            }),
-                          ],
-                        ),
-                      ),
+                  ),
+                ],
               ),
               const SizedBox(
-                width: 10,
+                height: 10,
               ),
-              Observer(
-                builder: (context) {
-                  return TextButton(
-                    onPressed: () {
-                      store.changeSearchMode();
-                    },
-                    child: Text(
-                      store.searchingByCep
-                          ? 'Não sei meu cep'
-                          : 'Pesquisar por CEP',
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            decoration: TextDecoration.underline,
-                          ),
-                    ),
-                  );
-                },
-              ),
-              Observer(
-                builder: (context) {
-                  return Visibility(
-                    visible: store.uniqueUFs.isNotEmpty,
-                    child: DropdownButton<String>(
-                      hint: const Text("Selecione UF"),
-                      dropdownColor: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      value: store.selectedUF,
-                      onChanged: (String? newValue) {
-                        store.selectedUF = newValue;
-                        store.filterAddressListByUF(newValue);
-                      },
-                      items: store.uniqueUFs
-                          .map<DropdownMenuItem<String>>((String uf) {
-                        return DropdownMenuItem<String>(
-                          value: uf,
-                          child: Text(uf),
-                        );
-                      }).toList(),
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(width: 10),
-              Observer(
-                builder: (context) {
-                  return Visibility(
-                    visible: store.uniqueBairros.isNotEmpty,
-                    child: DropdownButton<String>(
-                      hint: const Text("Selecione Localidade"),
-                      value: store.selectedBairro,
-                      dropdownColor: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      onChanged: (String? newValue) {
-                        store.selectedBairro = newValue;
-                        store.filterAddressListByBairro(newValue);
-                      },
-                      items: store.uniqueBairros.map<DropdownMenuItem<String>>(
-                        (String localidade) {
-                          return DropdownMenuItem<String>(
-                            value: localidade,
-                            child: Text(localidade),
-                          );
+              Row(
+                children: [
+                  Observer(
+                    builder: (context) {
+                      return TextButton(
+                        onPressed: () {
+                          store.changeSearchMode();
                         },
-                      ).toList(),
-                    ),
-                  );
-                },
+                        child: Text(
+                          store.searchingByCep
+                              ? 'Não sei meu cep'
+                              : 'Pesquisar por CEP',
+                          style:
+                              Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    decoration: TextDecoration.underline,
+                                  ),
+                        ),
+                      );
+                    },
+                  ),
+                  Observer(
+                    builder: (context) {
+                      return Visibility(
+                        visible: store.uniqueUFs.isNotEmpty,
+                        child: DropdownButton<String>(
+                          hint: const Text("Selecione UF"),
+                          dropdownColor: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          value: store.selectedUF,
+                          onChanged: (String? newValue) {
+                            store.selectedUF = newValue;
+                            store.filterAddressListByUF(newValue);
+                          },
+                          items: store.uniqueUFs
+                              .map<DropdownMenuItem<String>>((String uf) {
+                            return DropdownMenuItem<String>(
+                              value: uf,
+                              child: Text(uf),
+                            );
+                          }).toList(),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(width: 10),
+                  Observer(
+                    builder: (context) {
+                      return Visibility(
+                        visible: store.uniqueBairros.isNotEmpty,
+                        child: DropdownButton<String>(
+                          hint: const Text("Selecione Localidade"),
+                          value: store.selectedBairro,
+                          dropdownColor: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          onChanged: (String? newValue) {
+                            store.selectedBairro = newValue;
+                            store.filterAddressListByBairro(newValue);
+                          },
+                          items:
+                              store.uniqueBairros.map<DropdownMenuItem<String>>(
+                            (String localidade) {
+                              return DropdownMenuItem<String>(
+                                value: localidade,
+                                child: Text(localidade),
+                              );
+                            },
+                          ).toList(),
+                        ),
+                      );
+                    },
+                  ),
+                ],
               ),
               const SizedBox(width: 10),
               Observer(

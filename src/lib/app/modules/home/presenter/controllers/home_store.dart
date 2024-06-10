@@ -151,9 +151,7 @@ abstract class HomeStoreBase with Store {
   void filterAddressListByBairro(String? bairro) {
     if (bairro != null && bairro.isNotEmpty) {
       filteredAddressList = ObservableList<CepModel>.of(
-        addressList
-            .where((address) => address.bairro == bairro)
-            .toList(),
+        addressList.where((address) => address.bairro == bairro).toList(),
       );
     } else {
       filteredAddressList = ObservableList<CepModel>.of(addressList);
